@@ -1,9 +1,11 @@
 package com.ylliu.spring.demo.rest;
 
 import com.ylliu.spring.demo.entity.Student;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,12 +13,23 @@ import java.util.List;
 @RequestMapping("/api")
 public class StudentRestController {
 
+    private List<Student> students;
+
+    @PostConstruct
+    public void loadData() {
+        students = new ArrayList<>();
+        students.add(new Student("Mary", "Public"));
+        students.add(new Student("John", "Doe"));
+        students.add(new Student("Bonita", "Applebum"));
+    }
+
     @RequestMapping("/students")
     public List<Student> getStudents() {
-        List<Student> theStudents = new ArrayList<>();
-        theStudents.add(new Student("Mary", "Public"));
-        theStudents.add(new Student("John", "Doe"));
-        theStudents.add(new Student("Bonita", "Applebum"));
-        return theStudents;
+        return students;
+    }
+
+    @RequestMapping("/students/{studentId}")
+    public Student getStudent(@PathVariable int studentId) {
+        return students.get(studentId);
     }
 }
